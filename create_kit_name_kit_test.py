@@ -1,15 +1,6 @@
+# файл с тестами и вспомогательными функциями
 import sender_stand_request
-
-
-def get_auth_token() -> str:
-    """
-    Функция для получения authToken пользователя
-    :return: строка со значением токена
-    """
-    server_response = sender_stand_request.post_new_user()  # отправляем запрос на создание пользователя, записываем ответ
-    response_dict = server_response.json()  # json из ответа записываем в переменную response_dict
-    auth_token = response_dict['authToken']  # записываем значение токена в переменную auth_token
-    return auth_token  # возвращаем переменную с токеном
+from sender_stand_request import auth
 
 
 def positive_assert(kit_name) -> None:
@@ -19,21 +10,21 @@ def positive_assert(kit_name) -> None:
     :return: None
     """
     kit_body = sender_stand_request.get_body(kit_name)  # получаем тело запроса с именем из параметра kit_name
-    auth_token = get_auth_token()  # получаем токен пользователя
+    auth_token = auth  # получаем токен пользователя
     create_kit_response = sender_stand_request.post_new_user_kit(kit_body, auth_token)  # отправляем запрос и записываем ответ
 
     assert create_kit_response.status_code == 201  # проверяем, что код ответа 201
     assert create_kit_response.json()["name"] == kit_name  # проверяем, что имя набора в ответе равно значению kit_name
 
 
-def negative_assert(kit_name) -> None:
+def negative_assert (kit_name) -> None:
     """
     Функция для запуска негативных проверок создания набора пользователя
     :param kit_name: невалидное имя набора
     :return: None
     """
     kit_body = sender_stand_request.get_body(kit_name)  # получаем тело запроса с именем из параметра kit_name
-    auth_token = get_auth_token()  # получаем токен пользователя
+    auth_token = auth  # получаем токен пользователя
     create_kit_response = sender_stand_request.post_new_user_kit(kit_body, auth_token)  # отправляем запрос и записываем ответ
 
     assert create_kit_response.status_code == 400  # проверяем, что код ответа 400
@@ -45,7 +36,7 @@ def negative_assert_with_no_parametr() -> None:
     :return: None
     """
     kit_body = {}  # записываем в тело пустое значение (без параметров)
-    auth_token = get_auth_token()  # получаем токен пользователя
+    auth_token = auth  # получаем токен пользователя
     create_kit_response = sender_stand_request.post_new_user_kit(kit_body, auth_token)  # отправляем запрос и записываем ответ
 
     assert create_kit_response.status_code == 400  # проверяем, что код ответа 400

@@ -1,3 +1,4 @@
+# в данном файле содержатся функции для отправки запросов к API
 import requests
 import configuration, data
 
@@ -39,3 +40,17 @@ def post_new_user_kit(kit_body, auth_token) -> requests.Response:
                          json=kit_body,  # тут тело
                          headers=request_headers) # заголовки
 
+
+def get_auth_token() -> str:
+    """
+    Функция для получения authToken пользователя
+    :return: строка со значением токена
+    """
+    server_response = post_new_user()  # отправляем запрос на создание пользователя, записываем ответ
+    response_dict = server_response.json()  # json из ответа записываем в переменную response_dict
+    auth_token = response_dict['authToken']  # записываем значение токена в переменную auth_token
+    return auth_token  # возвращаем переменную с токеном
+
+
+if __name__ == "__main__":
+    auth = get_auth_token()
